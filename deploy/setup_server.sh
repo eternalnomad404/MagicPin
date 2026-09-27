@@ -13,7 +13,7 @@ REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 echo "==> host will be https://$HOST"
 
 sudo apt-get update -y
-sudo apt-get install -y python3 python3-venv python3-pip debian-keyring debian-archive-keyring apt-transport-https curl
+sudo apt-get install -y rsync python3 python3-venv python3-pip debian-keyring debian-archive-keyring apt-transport-https curl
 
 # ---- app ----
 sudo mkdir -p "$APP_DIR"

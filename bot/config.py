@@ -40,8 +40,9 @@ CONTACT_EMAIL = os.getenv("CONTACT_EMAIL", "amanjain0006@gmail.com")
 BOT_VERSION = "1.0.0"
 SUBMITTED_AT = os.getenv("SUBMITTED_AT", "2026-09-27T00:00:00Z")
 APPROACH = (
-    "trigger-kind playbooks pick one signal, a grounded fact sheet feeds a "
-    "temperature-0 composer, a validator rejects any number/URL/claim not in context"
+    "per-trigger-kind playbooks pick one signal; a two-tier grounded fact sheet feeds the composer; "
+    "a validator rejects any number, URL or claim not in context; rule-first reply engine; "
+    "compositions cached by context version for determinism"
 )
 
 LOG_DIR = Path(os.getenv("LOG_DIR", Path(__file__).resolve().parent.parent / "logs"))
