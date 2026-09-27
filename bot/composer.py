@@ -41,7 +41,7 @@ def conversation_id_for(trigger: dict, now: datetime) -> str:
     mid = trigger.get("merchant_id", "m")
     cid = trigger.get("customer_id")
     who = _short(cid) if cid else _short(mid)
-    return f"conv_{who}_{kind}_{now.strftime('%Y%m%d')}"
+    return f"conv_{who}_{kind}_{now.strftime('%Y%m%d')}_{datetime.now().strftime('%H%M')}"
 
 
 def version_key(store: Store, trigger: dict, trigger_id: str) -> tuple:
@@ -71,7 +71,7 @@ def eligibility(store: Store, trigger_id: str, now: datetime) -> tuple[Optional[
     # expires_at is deliberately not a hard gate: the dataset is dated April 2026
     # while the judge may send the real clock. It is passed to the composer as a fact.
     skey = trigger.get("suppression_key") or f"trigger:{trigger_id}"
-    if skey in store.sent_suppression_keys:
+    if store.suppressed(skey, config.SUPPRESSION_TTL_HOURS):
         return None, "suppression key already sent"
     customer = None
     if trigger.get("scope") == "customer" or trigger.get("customer_id"):
@@ -244,7 +244,7 @@ async def tick(store: Store, now: datetime, available: list[str]) -> list[dict]:
 
     # commit side effects only for what we actually send
     for a in actions:
-        store.sent_suppression_keys.add(a["suppression_key"])
+        store.mark_sent(a["suppression_key"])
         conv = store.conversation(a["conversation_id"], a["merchant_id"], a.get("customer_id"), a["trigger_id"])
         conv.send_as = a["send_as"]
         conv.turns.append(__import__("bot.store", fromlist=["Turn"]).Turn("bot", a["body"], now.isoformat()))

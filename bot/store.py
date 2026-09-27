@@ -66,7 +66,7 @@ class Store:
         self.started = time.time()
         self.contexts: dict[tuple[str, str], dict[str, Any]] = {}
         self.conversations: dict[str, Conversation] = {}
-        self.sent_suppression_keys: set[str] = set()
+        self.sent_suppression_keys: dict[str, float] = {}  # key -> wall-clock time sent
         self.merchant_state: dict[str, MerchantState] = {}
         # trigger_id -> {"key": versions tuple, "action": dict | None}
         self.compose_cache: dict[str, dict[str, Any]] = {}
@@ -129,8 +129,15 @@ class Store:
         st = self.merchant_state.get(merchant_id or "_unknown")
         return bool(st and st.opted_out_until and st.opted_out_until > now)
 
-    def opt_out(self, merchant_id: Optional[str], days: int) -> None:
-        self.mstate(merchant_id).opted_out_until = utcnow() + timedelta(days=days)
+    def opt_out(self, merchant_id: Optional[str], hours: float) -> None:
+        self.mstate(merchant_id).opted_out_until = utcnow() + timedelta(hours=hours)
+
+    def suppressed(self, key: str, ttl_hours: float) -> bool:
+        sent = self.sent_suppression_keys.get(key)
+        return bool(sent and (time.time() - sent) < ttl_hours * 3600)
+
+    def mark_sent(self, key: str) -> None:
+        self.sent_suppression_keys[key] = time.time()
 
     # ---------------- conversations ----------------
     def conversation(self, conversation_id: str, merchant_id=None, customer_id=None, trigger_id=None) -> Conversation:

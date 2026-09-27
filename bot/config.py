@@ -32,7 +32,9 @@ LLM_CONCURRENCY = int(os.getenv("LLM_CONCURRENCY", "8"))
 
 MAX_ACTIONS_PER_TICK = 20
 MAX_BOT_TURNS_PER_CONVERSATION = 5
-OPT_OUT_DAYS = 30
+# Wall-clock expiries so a second judged run against the same live bot starts clean.
+OPT_OUT_HOURS = 6            # after "stop" / hostility, no proactive sends to that merchant
+SUPPRESSION_TTL_HOURS = 3    # a suppression key blocks a resend for this long
 
 TEAM_NAME = os.getenv("TEAM_NAME", "Nukkad")
 TEAM_MEMBERS = [m.strip() for m in os.getenv("TEAM_MEMBERS", "Aman Jain").split(",") if m.strip()]

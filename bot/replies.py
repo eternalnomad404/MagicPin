@@ -144,10 +144,10 @@ async def handle_reply(store: Store, req: dict[str, Any]) -> dict[str, Any]:
     if mode == "HOSTILE" or mode == "OPT_OUT":
         conv.ended = True
         mst.hostile_hits += 1
-        store.opt_out(conv.merchant_id, config.OPT_OUT_DAYS)
+        store.opt_out(conv.merchant_id, config.OPT_OUT_HOURS)
         return {"action": "end",
                 "rationale": ("Merchant asked us to stop / expressed frustration. Closing without further messages and "
-                              f"suppressing all triggers for this merchant for {config.OPT_OUT_DAYS} days.")}
+                              "suppressing all proactive triggers for this merchant.")}
 
     if mode == "AUTO_REPLY":
         # Detection must work across conversation ids: the judge may send the same
