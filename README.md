@@ -4,7 +4,7 @@
 
 ## Approach in one paragraph
 
-Every send is `compose(category, merchant, trigger, customer?)`. A per-trigger-kind **playbook** decides which single signal leads, which compulsion lever fits and what CTA shape to use. A **fact sheet** is built from the stored contexts in two tiers: facts the merchant can verify on their own dashboard (trigger payload, performance, signals, active offers, identity) and supporting context (digest items, peer stats, review themes) that may only be used with its source stated in the message. Claude Sonnet 5 writes the message from the sheet and playbook. A **validator** then rejects anything the judge would penalise: URLs, any number not present in the contexts, taboo vocabulary, more than one ask, repeats, and rationales that do not read as clean justification. One retry with the violations, then soft issues ship and hard issues are dropped. Silence beats a generic nudge.
+Every send is `compose(category, merchant, trigger, customer?)`. A per-trigger-kind **playbook** decides which single signal leads, which compulsion lever fits and what CTA shape to use. A **fact sheet** is built from the stored contexts in two tiers: facts the merchant can verify on their own dashboard (trigger payload, performance, signals, active offers, identity) and supporting context (digest items, peer stats, review themes) that may only be used with its source stated in the message. Claude Opus 5 writes the proactive message from the sheet and playbook; Claude Sonnet 5 words conversation replies (faster, and replies are graded mostly on behaviour the rule engine already decides). A **validator** then rejects anything the judge would penalise: URLs, any number not present in the contexts, taboo vocabulary, more than one ask, repeats, and rationales that do not read as clean justification. One retry with the violations, then soft issues ship and hard issues are dropped. Silence beats a generic nudge.
 
 ## Why the decisions look the way they do
 
@@ -47,7 +47,7 @@ PYTHONUTF8=1 python scripts/full_run.py --no-score   # every seed trigger with c
 ## Tradeoffs
 
 - In-memory state, single worker. The brief guarantees no restart mid-test; a database would add latency against a 30s budget and one more thing to fail on a 1 GB box. Teardown wipes everything.
-- Sonnet 5 at medium effort: p50 ≈ 5s per composition, worst seen ≈ 11s, well inside the 30s window with headroom for retries.
+- Opus 5 at medium effort for composition: p50 ≈ 10s, worst seen ≈ 11s, inside the 30s window with headroom for one retry. Sonnet 5 for replies: 2-4s.
 - The judge's scoring prompt only shows it a slice of the context. Facts outside that slice score as fabrication even when real, so the composer prefers the visible slice and cites sources for the rest. That costs a little richness on research digests and gains a lot of trust.
 
 ## What extra context would have helped most
