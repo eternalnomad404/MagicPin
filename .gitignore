@@ -23,3 +23,9 @@ Thumbs.db
 
 # downloaded pack archive
 magicpin-ai-challenge.zip
+
+# ssh keys
+*.pem
+*.ppk
+reports/
+logs_uvicorn.txt
