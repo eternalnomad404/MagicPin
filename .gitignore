@@ -29,3 +29,4 @@ magicpin-ai-challenge.zip
 *.ppk
 reports/
 logs_uvicorn.txt
+logs/
