@@ -31,6 +31,7 @@ REPLY_BUDGET_S = _f("REPLY_BUDGET_S", 22.0)
 LLM_CONCURRENCY = int(os.getenv("LLM_CONCURRENCY", "8"))
 
 MAX_ACTIONS_PER_TICK = 20
+MERCHANT_SPACING_MIN = 20   # simulated minutes to wait before a new proactive send while a merchant has not replied
 MAX_BOT_TURNS_PER_CONVERSATION = 5
 # Wall-clock expiries so a second judged run against the same live bot starts clean.
 OPT_OUT_HOURS = 6            # after "stop" / hostility, no proactive sends to that merchant

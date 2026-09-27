@@ -151,10 +151,14 @@ class Store:
             conv.customer_id = conv.customer_id or customer_id
         return conv
 
-    def has_live_conversation(self, merchant_id: str) -> bool:
+    def awaiting_reply_since(self, merchant_id: str) -> Optional[datetime]:
+        """When the bot last messaged this merchant in a still-open conversation
+        with no reply yet, else None."""
         cid = self.active_conv_by_merchant.get(merchant_id)
         conv = self.conversations.get(cid) if cid else None
-        return bool(conv and not conv.ended)
+        if not conv or conv.ended or not conv.turns or conv.turns[-1].role != "bot":
+            return None
+        return parse_iso(conv.turns[-1].ts)
 
     def teardown(self) -> None:
         self.contexts.clear()

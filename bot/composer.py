@@ -234,6 +234,11 @@ async def tick(store: Store, now: datetime, available: list[str]) -> list[dict]:
         if not action:
             continue
         recipient = action.get("customer_id") or action["merchant_id"]
+        if not action.get("customer_id"):
+            since = store.awaiting_reply_since(action["merchant_id"])
+            if since and (now - since).total_seconds() < config.MERCHANT_SPACING_MIN * 60:
+                log_event("compose_skip", trigger_id=tid, reason="merchant has an unanswered message; spacing")
+                continue
         if recipient in seen_recipients:
             log_event("compose_skip", trigger_id=tid, reason="one action per recipient per tick")
             continue
